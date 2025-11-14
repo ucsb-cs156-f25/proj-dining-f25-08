@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-f25/proj-dining-f25-08
 owner: ucsb-cs156-f25
 repo_name: proj-dining-f25-08
-pull_requests: []
+pull_requests: [{"author":{"id":"U_kgDOCN6bmA","is_bot":false,"login":"emilylaoo","name":""},"headRefName":"Emily-H2Connections","number":21,"title":"Emily: added line to app-dev properties file to enable multiple H2 connections","url":"https://github.com/ucsb-cs156-f25/proj-dining-f25-08/pull/21"}]
