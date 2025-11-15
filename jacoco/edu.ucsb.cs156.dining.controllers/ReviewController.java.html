@@ -242,5 +242,32 @@ import org.springframework.web.bind.annotation.RestController;
 <span class="fc" id="L242">    Iterable&lt;Review&gt; reviewsList = reviewRepository.findByStatus(ModerationStatus.AWAITING_REVIEW);</span>
 <span class="fc" id="L243">    return reviewsList;</span>
   }
+
+  @Operation(summary = &quot;Get a single review by id (restricted)&quot;)
+  @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+  @GetMapping(&quot;/{id}&quot;)
+  public Review getReviewById(@PathVariable Long id) {
+
+<span class="nc" id="L251">    Review review =</span>
+        reviewRepository
+<span class="nc" id="L253">            .findById(id)</span>
+<span class="nc" id="L254">            .orElseThrow(() -&gt; new EntityNotFoundException(Review.class, id));</span>
+
+<span class="nc" id="L256">    User current = getCurrentUser().getUser();</span>
+
+<span class="nc bnc" id="L258" title="All 2 branches missed.">    boolean isOwner = current.getId() == review.getReviewer().getId();</span>
+
+<span class="nc" id="L260">    boolean isAdmin =</span>
+<span class="nc" id="L261">        getCurrentUser().getRoles().stream().anyMatch(r -&gt; r.getAuthority().equals(&quot;ROLE_ADMIN&quot;));</span>
+
+<span class="nc" id="L263">    boolean isModerator =</span>
+<span class="nc" id="L264">        getCurrentUser().getRoles().stream()</span>
+<span class="nc" id="L265">            .anyMatch(r -&gt; r.getAuthority().equals(&quot;ROLE_MODERATOR&quot;));</span>
+
+<span class="nc bnc" id="L267" title="All 6 branches missed.">    if (!(isOwner || isAdmin || isModerator)) {</span>
+<span class="nc" id="L268">      throw new AccessDeniedException(&quot;No permission to view this review&quot;);</span>
+    }
+<span class="nc" id="L270">    return review;</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
