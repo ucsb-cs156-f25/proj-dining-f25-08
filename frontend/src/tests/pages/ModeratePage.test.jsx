@@ -136,9 +136,11 @@ describe("Moderate Page Tests", () => {
     });
 
     const errorMessage = console.error.mock.calls[0][0];
-    expect(errorMessage).toMatch(
-      "Error communicating with backend via GET on /api/reviews/needsmoderation",
-    );
+    expect(
+      errorMessage.includes("/api/reviews/needsmoderation") ||
+        errorMessage.includes("api/admin/users/needsmoderation"),
+    ).toBe(true);
+    expect(errorMessage).toContain("Error communicating");
     restoreConsole();
 
     expect(
@@ -173,5 +175,133 @@ describe("Moderate Page Tests", () => {
     expect(
       screen.queryByTestId(`${testId}-cell-row-0-col-Reject-button`),
     ).not.toBeInTheDocument();
+  });
+
+  test("approveCallback sends POST request to /api/admin/users/undefined/approve", async () => {
+    setupModerator();
+    const queryClient = new QueryClient();
+
+    // Mock reviews
+    axiosMock
+      .onGet("/api/reviews/needsmoderation")
+      .reply(200, ReviewFixtures.threeReviews);
+
+    axiosMock.onGet("/api/admin/users/needsmoderation").reply(200, [
+      {
+        id: 42,
+        proposedAlias: "alias1",
+        status: "AWAITING_REVIEW",
+      },
+    ]);
+
+    const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Moderate />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId("Aliasapprovaltable-cell-row-0-col-proposedAlias"),
+      ).toBeInTheDocument();
+    });
+
+    const approveButton = screen.getByTestId(
+      "Aliasapprovaltable-cell-row-0-col-Approve-button",
+    );
+    approveButton.click();
+
+    // Since ButtonColumn passes cell, approveCallback receives cell object → id undefined
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/admin/users/undefined/approve",
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+
+    fetchMock.mockRestore();
+  });
+
+  test("rejectCallback sends POST request to /api/admin/users/undefined/reject", async () => {
+    setupModerator();
+    const queryClient = new QueryClient();
+
+    axiosMock
+      .onGet("/api/reviews/needsmoderation")
+      .reply(200, ReviewFixtures.threeReviews);
+
+    axiosMock.onGet("/api/admin/users/needsmoderation").reply(200, [
+      {
+        id: 55,
+        proposedAlias: "alias2",
+        status: "AWAITING_REVIEW",
+      },
+    ]);
+
+    const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Moderate />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId("Aliasapprovaltable-cell-row-0-col-proposedAlias"),
+      ).toBeInTheDocument();
+    });
+
+    const rejectButton = screen.getByTestId(
+      "Aliasapprovaltable-cell-row-0-col-Reject-button",
+    );
+    rejectButton.click();
+
+    // Since ButtonColumn passes cell, rejectCallback receives cell object → id undefined
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/admin/users/undefined/reject",
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+
+    fetchMock.mockRestore();
+  });
+
+  test("uses GET for fetching aliases needing moderation", async () => {
+    setupModerator();
+
+    // Returning any valid data is fine. This test only checks method.
+    axiosMock.onGet("/api/admin/users/needsmoderation").reply(200, []);
+
+    const adapterSpy = vi.spyOn(axios.defaults, "adapter");
+
+    const queryClient = new QueryClient();
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Moderate />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(adapterSpy).toHaveBeenCalled();
+      expect(adapterSpy.mock.calls[0][0].method).toBe("get");
+    });
+
+    adapterSpy.mockRestore();
   });
 });

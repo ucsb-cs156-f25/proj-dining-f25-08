@@ -3,6 +3,7 @@ import { useBackend } from "main/utils/useBackend";
 import { useCurrentUser, hasRole } from "main/utils/currentUser";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import ReviewsTable from "main/components/Reviews/ReviewsTable";
+import AliasApprovalTable from "main/components/AliasApproval/AliasApprovalTable";
 
 const Moderate = () => {
   const currentUser = useCurrentUser();
@@ -14,7 +15,20 @@ const Moderate = () => {
   } = useBackend(
     // Stryker disable next-line all : don't test internal caching of React Query
     ["/api/reviews/needsmoderation"],
+    // Stryker disable next-line all : don't test internal caching of React Query
     { method: "GET", url: "/api/reviews/needsmoderation" },
+    // Stryker disable next-line all : don't test internal caching of React Query
+    [],
+  );
+
+  //
+  // Fetch aliases awaiting approval
+  //
+  const { data: aliases } = useBackend(
+    // Stryker disable next-line all : don't test internal caching of React Query
+    ["/api/admin/users/needsmoderation"],
+    // Stryker disable next-line all : don't test internal caching of React Query
+    { method: "GET", url: "/api/admin/users/needsmoderation" },
     // Stryker disable next-line all : don't test internal caching of React Query
     [],
   );
@@ -23,11 +37,27 @@ const Moderate = () => {
     hasRole(currentUser, "ROLE_ADMIN") ||
     hasRole(currentUser, "ROLE_MODERATOR");
 
+  //
+  // Approve + Reject callbacks
+  //
+  const approveCallback = async (alias) => {
+    await fetch(`/api/admin/users/${alias.id}/approve`, { method: "POST" });
+  };
+
+  const rejectCallback = async (alias) => {
+    await fetch(`/api/admin/users/${alias.id}/reject`, { method: "POST" });
+  };
+
   return (
     <BasicLayout>
       <div className="pt-2">
         <h1>Moderation Page</h1>
         <ReviewsTable reviews={reviews} moderatorOptions={moderatorOptions} />
+        <AliasApprovalTable
+          aliases={aliases}
+          approveCallback={approveCallback}
+          rejectCallback={rejectCallback}
+        />
       </div>
     </BasicLayout>
   );
