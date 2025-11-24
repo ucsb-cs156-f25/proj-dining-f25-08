@@ -116,7 +116,7 @@ import org.springframework.web.server.ResponseStatusException;
    * @param approved the new moderation status
    * @return the updated user
    */
-  @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+  @PreAuthorize(&quot;hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')&quot;)
   @PutMapping(&quot;/currentUser/updateAliasModeration&quot;)
   public User updateAliasModeration(@RequestParam long id, @RequestParam Boolean approved) {
 
