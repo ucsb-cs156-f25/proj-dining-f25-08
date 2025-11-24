@@ -139,7 +139,7 @@ import org.springframework.web.server.ResponseStatusException;
 <span class="fc" id="L139">        userRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
 <span class="fc bfc" id="L141" title="All 2 branches covered.">    if (!adminEmails.contains(user.getEmail())) {</span>
-<span class="fc bfc" id="L142" title="All 2 branches covered.">      user.setAdmin(!user.getAdmin());</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">      user.setAdmin(!user.isAdmin());</span>
     }
 
 <span class="fc" id="L145">    userRepository.save(user);</span>
@@ -160,7 +160,7 @@ import org.springframework.web.server.ResponseStatusException;
 <span class="fc" id="L160">    User user =</span>
 <span class="fc" id="L161">        userRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc bfc" id="L163" title="All 2 branches covered.">    user.setModerator(!user.getModerator());</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">    user.setModerator(!user.isModerator());</span>
 
 <span class="fc" id="L165">    userRepository.save(user);</span>
 
