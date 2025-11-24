@@ -130,12 +130,11 @@ import org.springframework.web.server.ResponseStatusException;
 <span class="fc" id="L130">      user.setProposedAlias(null);</span>
     } else {
 <span class="fc" id="L132">      user.setStatus(ModerationStatus.REJECTED);</span>
-<span class="fc" id="L133">      user.setProposedAlias(null);</span>
     }
 
-<span class="fc" id="L136">    userRepository.save(user);</span>
+<span class="fc" id="L135">    userRepository.save(user);</span>
 
-<span class="fc" id="L138">    return user;</span>
+<span class="fc" id="L137">    return user;</span>
   }
 
   /**
@@ -149,16 +148,16 @@ import org.springframework.web.server.ResponseStatusException;
   @PutMapping(&quot;/admin/toggleAdmin&quot;)
   public User toggleAdminStatus(@RequestParam long id) {
 
-<span class="fc" id="L152">    User user =</span>
-<span class="fc" id="L153">        userRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L151">    User user =</span>
+<span class="fc" id="L152">        userRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc bfc" id="L155" title="All 2 branches covered.">    if (!adminEmails.contains(user.getEmail())) {</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">      user.setAdmin(!user.getAdmin());</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    if (!adminEmails.contains(user.getEmail())) {</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">      user.setAdmin(!user.isAdmin());</span>
     }
 
-<span class="fc" id="L159">    userRepository.save(user);</span>
+<span class="fc" id="L158">    userRepository.save(user);</span>
 
-<span class="fc" id="L161">    return user;</span>
+<span class="fc" id="L160">    return user;</span>
   }
 
   /**
@@ -171,14 +170,14 @@ import org.springframework.web.server.ResponseStatusException;
   @PutMapping(&quot;/admin/toggleModerator&quot;)
   public User toggleModeratorStatus(@RequestParam long id) {
 
-<span class="fc" id="L174">    User user =</span>
-<span class="fc" id="L175">        userRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L173">    User user =</span>
+<span class="fc" id="L174">        userRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc bfc" id="L177" title="All 2 branches covered.">    user.setModerator(!user.getModerator());</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">    user.setModerator(!user.isModerator());</span>
 
-<span class="fc" id="L179">    userRepository.save(user);</span>
+<span class="fc" id="L178">    userRepository.save(user);</span>
 
-<span class="fc" id="L181">    return user;</span>
+<span class="fc" id="L180">    return user;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
