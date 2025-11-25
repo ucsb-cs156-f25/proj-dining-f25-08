@@ -57,7 +57,7 @@ export default function HomePage() {
           onChange={onChangeDate}
         />
       </p>
-      <DiningCommonsTable commons={data} date={selectedDate} />
+      <DiningCommonsTable commons={combined} date={selectedDate} />
     </BasicLayout>
   );
 }
