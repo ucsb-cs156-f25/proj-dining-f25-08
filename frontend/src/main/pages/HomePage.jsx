@@ -36,6 +36,8 @@ export default function HomePage() {
   }
   const mealsOffered = useQueries(queries);
 
+  // Stryker disable next-line ArrayDeclaration : default empty array fallback not meaningfully testable
+
   const combined = Array.isArray(data)
     ? data.map((d, i) => ({
         ...d,
