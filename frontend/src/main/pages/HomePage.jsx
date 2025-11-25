@@ -1,8 +1,10 @@
 import { useState } from "react";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
-import { useBackend } from "../utils/useBackend";
-import DiningCommonsTable from "../components/DiningCommons/DiningCommonsTable";
+import { useQueries } from "react-query";
+import axios from "axios";
+import { useBackend } from "main/utils/useBackend";
+import DiningCommonsTable from "main/components/DiningCommons/DiningCommonsTable";
 
 export default function HomePage() {
   const { data } = useBackend(
@@ -19,6 +21,27 @@ export default function HomePage() {
     const newDate = e.target.value;
     setSelectedDate(newDate);
   };
+
+  const queries = [];
+  if (Array.isArray(data)) {
+    for (const d of data) {
+      queries.push({
+        queryKey: ["meals", d.code, date],
+        queryFn: () =>
+          axios
+            .get(`/api/diningcommons/${date}/${d.code}`)
+            .then((res) => res.data),
+      });
+    }
+  }
+  const mealsOffered = useQueries(queries);
+
+  const combined = Array.isArray(data)
+    ? data.map((d, i) => ({
+        ...d,
+        mealsOfferedToday: mealsOffered[i]?.data ?? [],
+      }))
+    : [];
 
   return (
     <BasicLayout>
