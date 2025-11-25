@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import { useQueries } from "react-query";
 import axios from "axios";
@@ -21,7 +19,6 @@ export default function HomePage() {
     const newDate = e.target.value;
     setSelectedDate(newDate);
   };
-
   const queries = [];
   if (Array.isArray(data)) {
     for (const d of data) {
@@ -35,8 +32,6 @@ export default function HomePage() {
     }
   }
   const mealsOffered = useQueries(queries);
-
-  // Stryker disable next-line ArrayDeclaration : default empty array fallback not meaningfully testable
 
   const combined = Array.isArray(data)
     ? data.map((d, i) => ({

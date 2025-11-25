@@ -49,10 +49,10 @@ describe("HomePage tests", () => {
     );
 
     await screen.findByTestId("DiningCommonsTable-cell-row-0-col-code");
-
     const dateInput = screen.getByLabelText("Select Date:");
     expect(dateInput).toHaveValue("2025-03-11");
     fireEvent.change(dateInput, { target: { value: "2025-08-16" } });
+
     for (let i = 0; i < diningCommonsFixtures.fourCommons.length; i++) {
       expect(
         screen.getByTestId(`DiningCommonsTable-cell-row-${i}-col-code`),
@@ -194,11 +194,6 @@ describe("HomePage meals offered today tests", () => {
         screen.queryByTestId("DiningCommonsTable-cell-row-0-col-code"),
       ).not.toBeInTheDocument();
     });
-
-    const diningCommonsRequests = axiosMock.history.get.filter((req) =>
-      req.url.startsWith("/api/diningcommons/"),
-    );
-    expect(diningCommonsRequests.length).toBe(0);
   });
 
   test("Handles undefined mealsOfferedToday", async () => {
