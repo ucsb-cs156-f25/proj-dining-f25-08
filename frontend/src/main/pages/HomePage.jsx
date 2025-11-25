@@ -16,10 +16,9 @@ export default function HomePage() {
   const [selectedDate, setSelectedDate] = useState(date);
 
   const onChangeDate = (e) => {
-    const newDate = e.target.value; 
+    const newDate = e.target.value;
     setSelectedDate(newDate);
   };
-  
 
   return (
     <BasicLayout>
@@ -27,8 +26,13 @@ export default function HomePage() {
       <p>
         <label htmlFor="dateSelector">Select Date:</label>
         <br></br>
-        <input type="date" id="dateSelector" name="dateSelector" value={selectedDate} 
-        onChange={onChangeDate} />
+        <input
+          type="date"
+          id="dateSelector"
+          name="dateSelector"
+          value={selectedDate}
+          onChange={onChangeDate}
+        />
       </p>
       <DiningCommonsTable commons={data} date={selectedDate} />
     </BasicLayout>
