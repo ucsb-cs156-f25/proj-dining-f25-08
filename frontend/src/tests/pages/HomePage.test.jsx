@@ -194,6 +194,11 @@ describe("HomePage meals offered today tests", () => {
         screen.queryByTestId("DiningCommonsTable-cell-row-0-col-code"),
       ).not.toBeInTheDocument();
     });
+
+    const diningCommonsRequests = axiosMock.history.get.filter((req) =>
+      req.url.startsWith("/api/diningcommons/"),
+    );
+    expect(diningCommonsRequests.length).toBe(0);
   });
 
   test("Handles undefined mealsOfferedToday", async () => {
