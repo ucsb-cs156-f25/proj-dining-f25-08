@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-f25/proj-dining-f25-08
 owner: ucsb-cs156-f25
 repo_name: proj-dining-f25-08
-pull_requests: [{"author":{"id":"U_kgDOCvKGbQ","is_bot":false,"login":"varsha-nara","name":""},"headRefName":"vn-moderate-alias-page","number":48,"title":"vn - added moderate alias page and implemented backend separate from moderate reviews","url":"https://github.com/ucsb-cs156-f25/proj-dining-f25-08/pull/48"}]
+pull_requests: []
